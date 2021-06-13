@@ -11,6 +11,7 @@ import 'package:file_picker/file_picker.dart';
 class addFlower extends StatelessWidget {
 
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +22,8 @@ class addFlower extends StatelessWidget {
 }
 
 class WizardFormBloc extends FormBloc<String, String> {
-
+  var imageValue="";
+  PlatformFile? pathsValue;
   // File _image;
   final picker = ImagePicker();
 
@@ -110,10 +112,16 @@ class WizardFormBloc extends FormBloc<String, String> {
       await Future.delayed(Duration(milliseconds: 500));
       print(flowername.value);
       //final notesReference = FirebaseDatabase.instance.reference();
-      final notesReference = FirebaseDatabase.instance.reference().child('notes');
+      final notesReference = FirebaseDatabase.instance.reference().child('flowers');
+
       notesReference.push().set({
         'Name': flowername.value,
-        'Color': flowerColor.value
+        'Color': flowerColor.value,
+        'image':imageValue,
+        'fName':firstName.value,
+        'lName':lastName.value,
+        'gender':gender.value,
+        'addDate':addedDate.value.toString(),
       }).then((_) {
         // ...
       });
@@ -133,6 +141,8 @@ class WizardForm extends StatefulWidget {
 class _WizardFormState extends State<WizardForm> {
   var _type = StepperType.horizontal;
   late File _imageFile;
+
+
 
 
   void _toggleType() {
@@ -176,7 +186,7 @@ class _WizardFormState extends State<WizardForm> {
             child: Scaffold(
               resizeToAvoidBottomInset: false,
               appBar: AppBar(
-                title: Text('Wizard'),
+                title: Text('Add Flower'),
                 actions: <Widget>[
                   IconButton(
                       icon: Icon(_type == StepperType.horizontal
@@ -292,8 +302,8 @@ class _WizardFormState extends State<WizardForm> {
             lastDate: DateTime.now(),
             format: DateFormat('yyyy-MM-dd'),
             decoration: InputDecoration(
-              labelText: 'Date of Birth',
-              prefixIcon: Icon(Icons.cake),
+              labelText: 'Date of addition',
+              prefixIcon: Icon(Icons.date_range),
             ),
           ),
         ],
@@ -305,7 +315,7 @@ class _WizardFormState extends State<WizardForm> {
 
     String fileName;
     String path;
-    PlatformFile? pathsValue;
+
     List<String> extensions;
     bool isLoadingPath = false;
     bool isMultiPick = false;
@@ -328,19 +338,20 @@ class _WizardFormState extends State<WizardForm> {
     void _openFileExplorer() async {
       setState(() => isLoadingPath = true);
       try {
+
         path = "";
         FilePickerResult? paths = await FilePicker.platform.pickFiles(
           type: FileType.custom,
+          withData: true,
           allowedExtensions: ['jpg', 'pdf', 'doc', 'png', 'jpeg'],);
 
         PlatformFile file = paths!.files.first;
 
-        print(paths!.files.first.bytes);
         List<int> imageBytes=paths!.files.first.bytes as List<int>;
-        String value=base64Encode(imageBytes);
-        print(value);
+        wizardFormBloc.imageValue=base64Encode(imageBytes);
+
         setState(() {
-          pathsValue = file;
+          wizardFormBloc.pathsValue = file;
         });
       }
       catch (e) {
@@ -358,7 +369,7 @@ class _WizardFormState extends State<WizardForm> {
               padding: const EdgeInsets.only(top: 50.0, bottom: 20.0),
               child: new RaisedButton(
                 onPressed: () => _openFileExplorer(),
-                child: new Text("Open file picker"),
+                child: new Text("Add Image"),
               ),
             ),
             // new Text(pathsValue!.name),
@@ -367,25 +378,29 @@ class _WizardFormState extends State<WizardForm> {
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: const CircularProgressIndicator()
               )
-                  : pathsValue!= null? new Container(
+                  : wizardFormBloc.pathsValue!= null? new Container(
                 padding: const EdgeInsets.only(bottom: 30.0),
                 height: MediaQuery.of(context).size.height * 0.50,
                 child: new Scrollbar(
                     child: new ListView.separated(
+
+
                       itemCount: 1,
                       itemBuilder: (BuildContext context, int index) {
-                        final bool isMultiPath = pathsValue != null;
+                        final bool isMultiPath = wizardFormBloc.pathsValue != null;
                         final int fileNo = index + 1;
-                        final String name = 'File $fileNo : ' + pathsValue!.name.toString();
-                        final filePath =  pathsValue!.path;
+                        final String name = 'File $fileNo : ' + wizardFormBloc.pathsValue!.name.toString();
+                        final filePath =  wizardFormBloc.pathsValue!.path;
+                        final value=wizardFormBloc.pathsValue!.path.toString();
                         return new ListTile(title: new Text(name,),
-                          subtitle: new Text(pathsValue!.path.toString()),
+                          //subtitle: new Text(wizardFormBloc.pathsValue!.path.toString()),
+                          subtitle:Image.file(File(filePath.toString()),width: 100 ,height: 100,),
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) => new Divider(),
                     )),
               )
-                  : new Text('pathsValue!.name.toString()'),
+                  : new Text("Select an Image to add flower"),
             ),
           ]
       ),

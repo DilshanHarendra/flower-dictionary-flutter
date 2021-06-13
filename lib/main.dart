@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
             print("You have an error"+snapshot.error.toString());
             return Text("Something went wrong");
           }else if(snapshot.hasData){
-            return Text(snapshot.toString());
+            return MyHomePage(title: 'Flower App');
           }else{
             return Center(
               child: CircularProgressIndicator(),
@@ -113,17 +113,19 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
+              'Click on the + button to add new flower ',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: (){
+      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => addFlower()),
+      );
+      },
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
