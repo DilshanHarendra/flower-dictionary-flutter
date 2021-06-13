@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "999189859533",
+    "project_id": "sample-app-babe2",
+    "storage_bucket": "sample-app-babe2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999189859533:android:a3433b52faf600610a2d84",
+        "android_client_info": {
+          "package_name": "com.example.ctsefirebasetest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999189859533-v1mco33nlvlocd3081s64a5cv8a1jlho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPRiGqLwfMEoZwDo3pqxnOEOjjdTfm_g0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999189859533-v1mco33nlvlocd3081s64a5cv8a1jlho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
