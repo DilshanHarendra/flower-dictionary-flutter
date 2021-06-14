@@ -241,7 +241,7 @@ class _WizardFormState extends State<WizardForm> {
             enableOnlyWhenFormBlocCanSubmit: true,
             decoration: InputDecoration(
               labelText: 'Flower name',
-              prefixIcon: Icon(Icons.sell_rounded),
+              prefixIcon: Icon(Icons.call_rounded),
             ),
           ),
           TextFieldBlocBuilder(
